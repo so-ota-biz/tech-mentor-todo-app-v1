@@ -1,12 +1,14 @@
 // import
-import { Box, Flex, Heading, Link } from '@chakra-ui/react'
+import { Box, Flex, Heading, Link, Button } from '@chakra-ui/react'
 import { memo, useCallback, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useLoginUser } from '@/providers/LoginUserProvider'
 // components
 import { MenuDrawer } from '@/components/molecules/MenuDrawer'
 
 export const Header: FC = memo(() => {
   const navigate = useNavigate()
+  const { logout } = useLoginUser()
   const onClickAccountManagement = useCallback(() => {
     navigate('/account_management')
   }, [navigate])
@@ -16,6 +18,11 @@ export const Header: FC = memo(() => {
   const onClickHome = useCallback(() => {
     navigate('/')
   }, [navigate])
+
+  const onClickLogout = useCallback(() => {
+    logout()
+    navigate('/')
+  }, [logout, navigate])
 
   return (
     <>
@@ -53,11 +60,15 @@ export const Header: FC = memo(() => {
           <Box pr={4}>
             <Link onClick={onClickAccountManagement}>アカウント管理</Link>
           </Box>
+          <Box pr={4}>
+            <Link onClick={onClickLogout}>ログアウト</Link>
+          </Box>
         </Flex>
         <MenuDrawer
           onClickHome={onClickHome}
           onClickTodoList={onClickTodoList}
           onClickAccountManagement={onClickAccountManagement}
+          onClickLogout={onClickLogout}
         />
       </Flex>
     </>

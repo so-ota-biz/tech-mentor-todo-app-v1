@@ -5,14 +5,17 @@ import { Toaster } from '@/components/ui/toaster'
 // theme
 import { system } from './theme/theme.ts'
 // components
+import { LoginUserProvider } from './providers/LoginUserProvider.tsx'
 import { Router } from './router/Router.tsx'
 
-function App() {
+const App = () => {
   return (
     <>
       <ChakraProvider value={system}>
         <BrowserRouter>
-          <Router />
+          <LoginUserProvider>
+            <Router />
+          </LoginUserProvider>
         </BrowserRouter>
         <Toaster />
       </ChakraProvider>

@@ -8,16 +8,22 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { memo } from 'react'
-import { FaBars, FaTimes } from 'react-icons/fa'
+import { FaBars } from 'react-icons/fa'
 
 type Props = {
   onClickHome: () => void
   onClickTodoList: () => void
   onClickAccountManagement: () => void
+  onClickLogout: () => void
 }
 
 export const MenuDrawer = memo((props: Props) => {
-  const { onClickHome, onClickTodoList, onClickAccountManagement } = props
+  const {
+    onClickHome,
+    onClickTodoList,
+    onClickAccountManagement,
+    onClickLogout
+  } = props
   const { open, onOpen, setOpen } = useDisclosure()
   const handleClick = (cb: () => void) => () => {
     cb()
@@ -134,6 +140,13 @@ export const MenuDrawer = memo((props: Props) => {
                   onClick={handleClick(onClickAccountManagement)}
                 >
                   アカウント管理
+                </Button>
+                <Button
+                  color="teal.500"
+                  backgroundColor="#fff"
+                  onClick={handleClick(onClickLogout)}
+                >
+                  ログアウト
                 </Button>
               </Flex>
             </Drawer.Body>

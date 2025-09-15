@@ -2,22 +2,27 @@
 import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+// hooks
 import { useMessage } from './useMassage'
+// providers
+import { useLoginUser } from '@/providers/LoginUserProvider'
 // types
 import type { User } from '../types/api/user'
 
 export const useAuth = () => {
   const navigate = useNavigate()
+  const { login } = useLoginUser()
   const { showMessage } = useMessage()
   const [loading, setLoading] = useState(false)
   const API_URL = 'https://jsonplaceholder.typicode.com/users'
-  const login = useCallback(
+  const handleLogin = useCallback(
     (id: string) => {
       setLoading(true)
       axios
         .get<User>(`${API_URL}/${id}`)
         .then((res) => {
           if (res.data) {
+            login({ ...res.data, isLoggedIn: true })
             showMessage({ title: 'ログインしました', type: 'success' })
             navigate('/')
           } else {
@@ -29,7 +34,7 @@ export const useAuth = () => {
         })
         .finally(() => setLoading(false))
     },
-    [navigate, showMessage]
+    [navigate, showMessage, login]
   )
-  return { login, loading }
+  return { handleLogin, loading }
 }

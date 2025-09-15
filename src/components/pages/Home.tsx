@@ -1,4 +1,5 @@
 // import
+import { Router } from '@/router/Router'
 import { memo } from 'react'
 
 type Props = {
@@ -8,8 +9,7 @@ type Props = {
 export const Home = memo((props: Props) => {
   return (
     <>
-      <div>Home</div>
-      {props.children}
+      <Router />
     </>
   )
 })

@@ -10,7 +10,6 @@ type Props = {
 
 export const useMessage = () => {
   const showMessage = useCallback((props: Props) => {
-    console.log(props)
     const { title, description, type } = props
     toaster.create({
       title,

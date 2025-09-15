@@ -1,14 +1,14 @@
 // import
 import {
   Button,
-  CloseButton,
   Drawer,
   Flex,
   IconButton,
+  CloseButton,
   useDisclosure
 } from '@chakra-ui/react'
 import { memo } from 'react'
-import { FaBars } from 'react-icons/fa'
+import { FaBars, FaTimes } from 'react-icons/fa'
 
 type Props = {
   onClickHome: () => void
@@ -40,23 +40,61 @@ export const MenuDrawer = memo((props: Props) => {
             colorScheme="teal"
             variant="ghost"
             bg="transparent"
-            _focus={{ boxShadow: 'none' }}
-            _focusVisible={{ boxShadow: 'none' }}
+            border="none"
+            borderColor="transparent"
+            _hover={{ bg: 'transparent' }}
+            _active={{ bg: 'transparent' }}
+            _focus={{
+              boxShadow: 'none',
+              outline: 'none',
+              border: 'none',
+              borderColor: 'transparent'
+            }}
+            _focusVisible={{
+              boxShadow: 'none',
+              outline: 'none',
+              border: 'none',
+              borderColor: 'transparent'
+            }}
           >
             <FaBars color="#319795" />
           </IconButton>
         </Drawer.Trigger>
         <Drawer.Positioner padding="4">
           <Drawer.Content rounded="md">
-            <Drawer.CloseTrigger>
+            <Drawer.CloseTrigger
+              style={{
+                background: 'transparent',
+                outline: 'none',
+                border: 'none',
+                boxShadow: 'none',
+                borderColor: 'transparent'
+              }}
+              tabIndex={0}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = 'none'
+                e.currentTarget.style.boxShadow = 'none'
+                e.currentTarget.style.borderColor = 'transparent'
+              }}
+            >
               <CloseButton
                 size="sm"
-                colorScheme="teal"
-                variant="ghost"
-                bg="transparent"
                 color="teal.500"
-                _focus={{ boxShadow: 'none' }}
-                _focusVisible={{ boxShadow: 'none' }}
+                bg="white"
+                border="1px solid #319795"
+                borderRadius="8px"
+                _hover={{ bg: 'white', borderColor: '#319795' }}
+                _active={{ bg: 'white', borderColor: '#319795' }}
+                _focus={{
+                  boxShadow: 'none',
+                  outline: 'none',
+                  borderColor: '#319795'
+                }}
+                _focusVisible={{
+                  boxShadow: 'none',
+                  outline: 'none',
+                  borderColor: '#319795'
+                }}
               />
             </Drawer.CloseTrigger>
             <Drawer.Header>

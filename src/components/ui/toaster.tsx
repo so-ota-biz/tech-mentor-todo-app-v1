@@ -1,4 +1,5 @@
-"use client"
+/* eslint-disable react-refresh/only-export-components */
+'use client'
 
 import {
   Toaster as ChakraToaster,
@@ -6,21 +7,21 @@ import {
   Spinner,
   Stack,
   Toast,
-  createToaster,
-} from "@chakra-ui/react"
+  createToaster
+} from '@chakra-ui/react'
 
 export const toaster = createToaster({
-  placement: "bottom-end",
-  pauseOnPageIdle: true,
+  placement: 'bottom-end',
+  pauseOnPageIdle: true
 })
 
 export const Toaster = () => {
   return (
     <Portal>
-      <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }}>
+      <ChakraToaster toaster={toaster} insetInline={{ mdDown: '4' }}>
         {(toast) => (
-          <Toast.Root width={{ md: "sm" }}>
-            {toast.type === "loading" ? (
+          <Toast.Root width={{ md: 'sm' }}>
+            {toast.type === 'loading' ? (
               <Spinner size="sm" color="blue.solid" />
             ) : (
               <Toast.Indicator />

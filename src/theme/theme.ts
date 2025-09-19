@@ -23,7 +23,11 @@ const config = defineConfig({
   },
   theme: {
     tokens: {
-      colors: {}
+      colors: {},
+      fonts: {
+        body: { value: "'Noto Sans JP', sans-serif" },
+        heading: { value: "'Noto Sans JP', sans-serif" }
+      }
     }
   }
 })

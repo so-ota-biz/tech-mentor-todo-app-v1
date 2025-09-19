@@ -4,8 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 // theme
 import { system } from './theme/theme.ts'
-// components
+// others
 import { LoginUserProvider } from './providers/LoginUserProvider.tsx'
+import { TodoProvider } from './providers/TodoProvider.tsx'
 import { Router } from './router/Router.tsx'
 
 const App = () => {
@@ -14,7 +15,9 @@ const App = () => {
       <ChakraProvider value={system}>
         <BrowserRouter>
           <LoginUserProvider>
-            <Router />
+            <TodoProvider>
+              <Router />
+            </TodoProvider>
           </LoginUserProvider>
         </BrowserRouter>
         <Toaster />

@@ -8,7 +8,7 @@ type Props = {
 export const UserManagement: FC = memo((props: Props) => {
   return (
     <>
-      <div>UserManagement</div>
+      <div>アカウント管理画面（工事中）</div>
       {props.children}
     </>
   )

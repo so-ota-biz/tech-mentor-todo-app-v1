@@ -6,6 +6,7 @@ import { UserManagement } from '@/components/pages/UserManagement'
 import { PrivateRoute } from './PrivateRoute'
 import { RootRedirect } from './RootRedirect'
 import { LoginPageOrRedirect } from './LoginPageOrRedirect'
+import { TodoEdit } from '@/components/pages/TodoEdit'
 
 export const routes = [
   {
@@ -32,6 +33,15 @@ export const routes = [
     element: (
       <PrivateRoute>
         <TodoList />
+      </PrivateRoute>
+    ),
+    withHeader: true
+  },
+  {
+    path: '/todos/:id/edit',
+    element: (
+      <PrivateRoute>
+        <TodoEdit />
       </PrivateRoute>
     ),
     withHeader: true

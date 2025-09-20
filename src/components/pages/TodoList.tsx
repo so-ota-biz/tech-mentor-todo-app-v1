@@ -110,8 +110,10 @@ export const TodoList = memo(() => {
           <CustomCombobox
             initialItems={statusOptions}
             label="ステータスで絞り込み"
-            value={filterStatus ? [filterStatus] : []}
-            onStatusChange={(status) => setFilterStatus(status || '')}
+            value={[filterStatus]}
+            onStatusChange={(status) =>
+              setFilterStatus(status || TodoStatusFilterEnum.All)
+            }
             placeholder="ステータスを選択"
           />
           <SortSelect

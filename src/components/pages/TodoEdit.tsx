@@ -56,6 +56,14 @@ export const TodoEdit = memo(({ mode }: TodoEditProps) => {
   }
 
   const onSave = useCallback(() => {
+    if (!formData.status) {
+      showMessage({ title: 'ステータスを選択してください', type: 'error' })
+      return
+    }
+    if (!formData.title || formData.title.trim() === '') {
+      showMessage({ title: 'タイトルを入力してください', type: 'error' })
+      return
+    }
     if (mode === TodoEditMode.Create) {
       // 新規作成
       const newTodo = {

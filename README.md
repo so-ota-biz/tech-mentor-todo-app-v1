@@ -18,3 +18,4 @@ TechMentor Reactコース中間課題
 - Todo編集
 - Todo削除
 - Todo一覧上でのフィルター機能
+- Todo一覧上でのソート機能

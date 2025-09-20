@@ -3,10 +3,8 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
-  Select,
-  Portal,
-  createListCollection
+  Heading
+  // Select, Portal, createListCollection は不要
 } from '@chakra-ui/react'
 import { memo, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,17 +12,9 @@ import { DeleteConfirmDialog } from '../molecules/DeleteConfirmDialog'
 import { useTodo } from '@/providers/TodoProvider'
 import { TodoStatusFilterEnum, TodoStatusFilterLabels } from '@/types/api/todo'
 import { CustomCombobox } from '../molecules/CustomCombobox'
+import { SortSelect } from '../molecules/SortSelect'
 
 export const TodoList = memo(() => {
-  // 並び替えオプション
-  const sortOptions = createListCollection({
-    items: [
-      { label: 'ID昇順', value: 'id_asc' },
-      { label: 'ID降順', value: 'id_desc' },
-      { label: 'ステータス昇順', value: 'status_asc' },
-      { label: 'ステータス降順', value: 'status_desc' }
-    ]
-  })
   const navigate = useNavigate()
   const { todos, setTodos } = useTodo()
 
@@ -124,40 +114,14 @@ export const TodoList = memo(() => {
             onStatusChange={(status) => setFilterStatus(status || '')}
             placeholder="ステータスを選択"
           />
-          <Select.Root
-            collection={sortOptions}
+          <SortSelect
             value={[`${sortKey}_${sortOrder}`]}
             onValueChange={(details) => {
               const [key, order] = details.value[0].split('_')
               setSortKey(key as 'id' | 'status')
               setSortOrder(order as 'asc' | 'desc')
             }}
-            size="sm"
-            width="180px"
-          >
-            <Select.HiddenSelect />
-            <Select.Label>並び替え</Select.Label>
-            <Select.Control>
-              <Select.Trigger>
-                <Select.ValueText placeholder="並び替え" />
-              </Select.Trigger>
-              <Select.IndicatorGroup>
-                <Select.Indicator />
-              </Select.IndicatorGroup>
-            </Select.Control>
-            <Portal>
-              <Select.Positioner>
-                <Select.Content>
-                  {sortOptions.items.map((option) => (
-                    <Select.Item item={option} key={option.value}>
-                      {option.label}
-                      <Select.ItemIndicator />
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Positioner>
-            </Portal>
-          </Select.Root>
+          />
         </Box>
         <Flex direction={'column'} p={4} gap={6} bg="white">
           {filteredTodos.map((todo) => {

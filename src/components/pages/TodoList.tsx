@@ -1,5 +1,13 @@
 // import
-import { Box, Button, Flex, Heading } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Select,
+  Portal,
+  createListCollection
+} from '@chakra-ui/react'
 import { memo, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DeleteConfirmDialog } from '../molecules/DeleteConfirmDialog'
@@ -8,6 +16,15 @@ import { TodoStatusFilterEnum, TodoStatusFilterLabels } from '@/types/api/todo'
 import { CustomCombobox } from '../molecules/CustomCombobox'
 
 export const TodoList = memo(() => {
+  // 並び替えオプション
+  const sortOptions = createListCollection({
+    items: [
+      { label: 'ID昇順', value: 'id_asc' },
+      { label: 'ID降順', value: 'id_desc' },
+      { label: 'ステータス昇順', value: 'status_asc' },
+      { label: 'ステータス降順', value: 'status_desc' }
+    ]
+  })
   const navigate = useNavigate()
   const { todos, setTodos } = useTodo()
 
@@ -19,6 +36,10 @@ export const TodoList = memo(() => {
   const [filterStatus, setFilterStatus] = useState<string>(
     TodoStatusFilterEnum.All
   )
+
+  // 並び替え用
+  const [sortKey, setSortKey] = useState<'id' | 'status'>('id')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
   // add
   const onAdd = useCallback(() => {
@@ -47,8 +68,19 @@ export const TodoList = memo(() => {
     }
   }, [selectedTodoId, setTodos, todos])
 
-  // フィルター適用
-  const filteredTodos = todos.filter((todo) =>
+  // 並び替え・フィルター適用
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (sortKey === 'id') {
+      return sortOrder === 'asc'
+        ? a.id.localeCompare(b.id)
+        : b.id.localeCompare(a.id)
+    } else {
+      return sortOrder === 'asc'
+        ? a.status.localeCompare(b.status)
+        : b.status.localeCompare(a.status)
+    }
+  })
+  const filteredTodos = sortedTodos.filter((todo) =>
     filterStatus === TodoStatusFilterEnum.All
       ? true
       : todo.status === filterStatus
@@ -84,7 +116,7 @@ export const TodoList = memo(() => {
             Todoを追加
           </Button>
         </Flex>
-        <Box px={4} pt={4}>
+        <Box px={4} pt={4} display="flex" gap={4} alignItems="center">
           <CustomCombobox
             initialItems={statusOptions}
             label="ステータスで絞り込み"
@@ -92,6 +124,40 @@ export const TodoList = memo(() => {
             onStatusChange={(status) => setFilterStatus(status || '')}
             placeholder="ステータスを選択"
           />
+          <Select.Root
+            collection={sortOptions}
+            value={[`${sortKey}_${sortOrder}`]}
+            onValueChange={(details) => {
+              const [key, order] = details.value[0].split('_')
+              setSortKey(key as 'id' | 'status')
+              setSortOrder(order as 'asc' | 'desc')
+            }}
+            size="sm"
+            width="180px"
+          >
+            <Select.HiddenSelect />
+            <Select.Label>並び替え</Select.Label>
+            <Select.Control>
+              <Select.Trigger>
+                <Select.ValueText placeholder="並び替え" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content>
+                  {sortOptions.items.map((option) => (
+                    <Select.Item item={option} key={option.value}>
+                      {option.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
         </Box>
         <Flex direction={'column'} p={4} gap={6} bg="white">
           {filteredTodos.map((todo) => {

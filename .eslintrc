@@ -1,0 +1,20 @@
+{
+  "env": {
+    "browser": true, // allow window, alert, document
+    "node": true, // allow process
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module" // import/export
+  },
+  "rules": {
+    // "no-console": "error",
+    // "indent": ["error", 2],
+    // "quotes": ["error", "single"],
+    // "semi": ["warn", "always"],
+    // "no-unused-vars": "warn",
+    // "camelcase": "warn"
+  },
+  "extends": ["airbnb-base"]
+}

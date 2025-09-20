@@ -2,7 +2,7 @@
 import { memo, useCallback, useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Stack, Flex, Input, Button, Field } from '@chakra-ui/react'
-import CustomCombobox from '../molecules/CustomCombobox'
+import { CustomCombobox } from '../molecules/CustomCombobox'
 import { v4 as uuidv4 } from 'uuid'
 import { useTodo } from '@/providers/TodoProvider'
 import {

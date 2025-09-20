@@ -14,6 +14,22 @@ export const TodoStatusEnum = {
 export type TodoStatusEnum =
   (typeof TodoStatusEnum)[keyof typeof TodoStatusEnum]
 
+// ステータスフィルター用Enum（全件を含む）
+export const TodoStatusFilterEnum = {
+  All: 'all',
+  ...TodoStatusEnum
+} as const
+
+export type TodoStatusFilterEnum =
+  (typeof TodoStatusFilterEnum)[keyof typeof TodoStatusFilterEnum]
+
+export const TodoStatusFilterLabels: Record<TodoStatusFilterEnum, string> = {
+  [TodoStatusFilterEnum.All]: '全件',
+  [TodoStatusFilterEnum.NotYetStarted]: '未着手',
+  [TodoStatusFilterEnum.InProgress]: '進行中',
+  [TodoStatusFilterEnum.Done]: '完了'
+}
+
 export const TodoStatusLabels: Record<TodoStatusEnum, string> = {
   [TodoStatusEnum.NotYetStarted]: '未着手',
   [TodoStatusEnum.InProgress]: '進行中',

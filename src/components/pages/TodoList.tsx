@@ -3,19 +3,22 @@ import { Box, Button, Flex, Heading } from '@chakra-ui/react'
 import { memo, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DeleteConfirmDialog } from '../molecules/DeleteConfirmDialog'
-// providers
 import { useTodo } from '@/providers/TodoProvider'
-
-// mock data
-// const todos = [
-//   { id: '1', title: '買い物', status: 'not_yet_started', detail: '' },
-//   { id: '2', title: '掃除', status: 'in_progress', detail: '' },
-//   { id: '3', title: '運動', status: 'done', detail: '' }
-// ] as Todo[]
+import { TodoStatusFilterEnum, TodoStatusFilterLabels } from '@/types/api/todo'
+import { CustomCombobox } from '../molecules/CustomCombobox'
 
 export const TodoList = memo(() => {
   const navigate = useNavigate()
   const { todos, setTodos } = useTodo()
+
+  // ステータスフィルター用
+  const statusOptions = Object.values(TodoStatusFilterEnum).map((value) => ({
+    value,
+    label: TodoStatusFilterLabels[value]
+  }))
+  const [filterStatus, setFilterStatus] = useState<string>(
+    TodoStatusFilterEnum.All
+  )
 
   // add
   const onAdd = useCallback(() => {
@@ -39,11 +42,17 @@ export const TodoList = memo(() => {
 
   const handleDeleteTodo = useCallback(() => {
     if (selectedTodoId) {
-      // Perform delete operation here
       setTodos(todos.filter((todo) => todo.id !== selectedTodoId))
       setIsDeleteDialogOpen(false)
     }
   }, [selectedTodoId, setTodos, todos])
+
+  // フィルター適用
+  const filteredTodos = todos.filter((todo) =>
+    filterStatus === TodoStatusFilterEnum.All
+      ? true
+      : todo.status === filterStatus
+  )
 
   return (
     <>
@@ -75,8 +84,17 @@ export const TodoList = memo(() => {
             Todoを追加
           </Button>
         </Flex>
+        <Box px={4} pt={4}>
+          <CustomCombobox
+            initialItems={statusOptions}
+            label="ステータスで絞り込み"
+            value={filterStatus ? [filterStatus] : []}
+            onStatusChange={(status) => setFilterStatus(status || '')}
+            placeholder="ステータスを選択"
+          />
+        </Box>
         <Flex direction={'column'} p={4} gap={6} bg="white">
-          {todos.map((todo) => {
+          {filteredTodos.map((todo) => {
             const getStatusColor = (status: string) => {
               switch (status) {
                 case 'done':

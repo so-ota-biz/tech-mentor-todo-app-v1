@@ -3,29 +3,28 @@ import { Box, Button, Flex, Heading } from '@chakra-ui/react'
 import { memo, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DeleteConfirmDialog } from '../molecules/DeleteConfirmDialog'
-// types
-import type { Todo } from '@/types/api/todo'
+// providers
+import { useTodo } from '@/providers/TodoProvider'
 
 // mock data
-const todos = [
-  { id: '1', title: '買い物', status: 'not_yet_started', detail: '' },
-  { id: '2', title: '掃除', status: 'in_progress', detail: '' },
-  { id: '3', title: '運動', status: 'done', detail: '' }
-] as Todo[]
+// const todos = [
+//   { id: '1', title: '買い物', status: 'not_yet_started', detail: '' },
+//   { id: '2', title: '掃除', status: 'in_progress', detail: '' },
+//   { id: '3', title: '運動', status: 'done', detail: '' }
+// ] as Todo[]
 
 export const TodoList = memo(() => {
   const navigate = useNavigate()
+  const { todos, setTodos } = useTodo()
 
   // add
   const onAdd = useCallback(() => {
-    console.log('Add new todo')
     navigate('/todos/create')
   }, [navigate])
 
   // edit
   const onEdit = useCallback(
     (id: string) => {
-      console.log(`Edit todo with id: ${id}`)
       navigate(`/todos/${id}/edit`)
     },
     [navigate]
@@ -40,12 +39,11 @@ export const TodoList = memo(() => {
 
   const handleDeleteTodo = useCallback(() => {
     if (selectedTodoId) {
-      console.log(`Delete todo with id: ${selectedTodoId}`)
       // Perform delete operation here
-      // xxxxxxx
+      setTodos(todos.filter((todo) => todo.id !== selectedTodoId))
       setIsDeleteDialogOpen(false)
     }
-  }, [selectedTodoId])
+  }, [selectedTodoId, setTodos, todos])
 
   return (
     <>
@@ -134,6 +132,8 @@ export const TodoList = memo(() => {
         onClose={() => setIsDeleteDialogOpen(false)}
         onClickOk={handleDeleteTodo}
         id={selectedTodoId}
+        title="このTodoを削除します。"
+        description="よろしいですか？"
       />
     </>
   )

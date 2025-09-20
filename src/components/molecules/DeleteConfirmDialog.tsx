@@ -41,7 +41,11 @@ export const DeleteConfirmDialog = memo((props: Props) => {
                 </Button>
               </Dialog.ActionTrigger>
               <Dialog.ActionTrigger asChild>
-                <Button colorScheme="teal" onClick={() => onClickOk(id)}>
+                <Button
+                  bg="red.400"
+                  color="white"
+                  onClick={() => onClickOk(id)}
+                >
                   実行
                 </Button>
               </Dialog.ActionTrigger>

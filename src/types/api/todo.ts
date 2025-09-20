@@ -1,8 +1,18 @@
-export enum TodoStatusEnum {
-  NotYetStarted = 'not_yet_started',
-  InProgress = 'in_progress',
-  Done = 'done'
-}
+export const TodoEditMode = {
+  Create: 'create',
+  Edit: 'edit'
+} as const
+
+export type TodoEditModeEnum = (typeof TodoEditMode)[keyof typeof TodoEditMode]
+
+export const TodoStatusEnum = {
+  NotYetStarted: 'not_yet_started',
+  InProgress: 'in_progress',
+  Done: 'done'
+} as const
+
+export type TodoStatusEnum =
+  (typeof TodoStatusEnum)[keyof typeof TodoStatusEnum]
 
 export const TodoStatusLabels: Record<TodoStatusEnum, string> = {
   [TodoStatusEnum.NotYetStarted]: '未着手',

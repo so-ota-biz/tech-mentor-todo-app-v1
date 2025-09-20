@@ -1,5 +1,5 @@
 // import
-import { Box, Flex, Heading, Link, Button } from '@chakra-ui/react'
+import { Box, Flex, Heading, Link } from '@chakra-ui/react'
 import { memo, useCallback, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLoginUser } from '@/providers/LoginUserProvider'

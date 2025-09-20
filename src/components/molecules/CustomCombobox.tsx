@@ -16,6 +16,7 @@ interface CustomComboboxProps
   initialItems: CollectionItem[]
   placeholder: string
   label: string
+  value?: string[]
   onStatusChange?: (status: string) => void
 }
 
@@ -23,6 +24,7 @@ const CustomCombobox: React.FC<CustomComboboxProps> = ({
   initialItems,
   placeholder,
   label,
+  value,
   onStatusChange,
   ...props
 }) => {
@@ -36,13 +38,25 @@ const CustomCombobox: React.FC<CustomComboboxProps> = ({
   return (
     <ChakraCombobox.Root
       {...props}
+      value={value}
       onInputValueChange={(e) => filter(e.inputValue)}
       onValueChange={(details) => onStatusChange?.(details.value[0])}
       collection={collection}
     >
       <ChakraCombobox.Label>{label}</ChakraCombobox.Label>
       <ChakraCombobox.Control>
-        <ChakraCombobox.Input placeholder={placeholder} />
+        <ChakraCombobox.Input
+          placeholder={placeholder}
+          value={(() => {
+            if (value && value.length > 0) {
+              const selected = initialItems.find(
+                (item) => item.value === value[0]
+              )
+              return selected ? selected.label : ''
+            }
+            return ''
+          })()}
+        />
         <ChakraCombobox.IndicatorGroup>
           <ChakraCombobox.ClearTrigger bg="transparent" border="none" />
           <ChakraCombobox.Trigger bg="transparent" border="none" />

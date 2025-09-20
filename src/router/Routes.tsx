@@ -7,6 +7,7 @@ import { PrivateRoute } from './PrivateRoute'
 import { RootRedirect } from './RootRedirect'
 import { LoginPageOrRedirect } from './LoginPageOrRedirect'
 import { TodoEdit } from '@/components/pages/TodoEdit'
+import { TodoEditMode } from '@/types/api/todo'
 
 export const routes = [
   {
@@ -41,7 +42,16 @@ export const routes = [
     path: '/todos/:id/edit',
     element: (
       <PrivateRoute>
-        <TodoEdit />
+        <TodoEdit mode={TodoEditMode.Edit} />
+      </PrivateRoute>
+    ),
+    withHeader: true
+  },
+  {
+    path: '/todos/create',
+    element: (
+      <PrivateRoute>
+        <TodoEdit mode={TodoEditMode.Create} />
       </PrivateRoute>
     ),
     withHeader: true

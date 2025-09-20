@@ -1,21 +1,35 @@
 // import
-import { Box, Button, Flex, Heading } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading
+  // Select, Portal, createListCollection は不要
+} from '@chakra-ui/react'
 import { memo, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DeleteConfirmDialog } from '../molecules/DeleteConfirmDialog'
-// providers
 import { useTodo } from '@/providers/TodoProvider'
-
-// mock data
-// const todos = [
-//   { id: '1', title: '買い物', status: 'not_yet_started', detail: '' },
-//   { id: '2', title: '掃除', status: 'in_progress', detail: '' },
-//   { id: '3', title: '運動', status: 'done', detail: '' }
-// ] as Todo[]
+import { TodoStatusFilterEnum, TodoStatusFilterLabels } from '@/types/api/todo'
+import { CustomCombobox } from '../molecules/CustomCombobox'
+import { SortSelect } from '../molecules/SortSelect'
 
 export const TodoList = memo(() => {
   const navigate = useNavigate()
   const { todos, setTodos } = useTodo()
+
+  // ステータスフィルター用
+  const statusOptions = Object.values(TodoStatusFilterEnum).map((value) => ({
+    value,
+    label: TodoStatusFilterLabels[value]
+  }))
+  const [filterStatus, setFilterStatus] = useState<string>(
+    TodoStatusFilterEnum.All
+  )
+
+  // 並び替え用
+  const [sortKey, setSortKey] = useState<'id' | 'status'>('id')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
   // add
   const onAdd = useCallback(() => {
@@ -39,11 +53,28 @@ export const TodoList = memo(() => {
 
   const handleDeleteTodo = useCallback(() => {
     if (selectedTodoId) {
-      // Perform delete operation here
       setTodos(todos.filter((todo) => todo.id !== selectedTodoId))
       setIsDeleteDialogOpen(false)
     }
   }, [selectedTodoId, setTodos, todos])
+
+  // 並び替え・フィルター適用
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (sortKey === 'id') {
+      return sortOrder === 'asc'
+        ? a.id.localeCompare(b.id)
+        : b.id.localeCompare(a.id)
+    } else {
+      return sortOrder === 'asc'
+        ? a.status.localeCompare(b.status)
+        : b.status.localeCompare(a.status)
+    }
+  })
+  const filteredTodos = sortedTodos.filter((todo) =>
+    filterStatus === TodoStatusFilterEnum.All
+      ? true
+      : todo.status === filterStatus
+  )
 
   return (
     <>
@@ -75,8 +106,27 @@ export const TodoList = memo(() => {
             Todoを追加
           </Button>
         </Flex>
+        <Box px={4} pt={4} display="flex" gap={4} alignItems="center">
+          <CustomCombobox
+            initialItems={statusOptions}
+            label="ステータスで絞り込み"
+            value={[filterStatus]}
+            onStatusChange={(status) =>
+              setFilterStatus(status || TodoStatusFilterEnum.All)
+            }
+            placeholder="ステータスを選択"
+          />
+          <SortSelect
+            value={[`${sortKey}_${sortOrder}`]}
+            onValueChange={(details) => {
+              const [key, order] = details.value[0].split('_')
+              setSortKey(key as 'id' | 'status')
+              setSortOrder(order as 'asc' | 'desc')
+            }}
+          />
+        </Box>
         <Flex direction={'column'} p={4} gap={6} bg="white">
-          {todos.map((todo) => {
+          {filteredTodos.map((todo) => {
             const getStatusColor = (status: string) => {
               switch (status) {
                 case 'done':

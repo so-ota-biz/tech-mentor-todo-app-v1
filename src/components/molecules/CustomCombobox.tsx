@@ -20,7 +20,7 @@ interface CustomComboboxProps
   onStatusChange?: (status: string) => void
 }
 
-const CustomCombobox: React.FC<CustomComboboxProps> = ({
+export const CustomCombobox: React.FC<CustomComboboxProps> = ({
   initialItems,
   placeholder,
   label,
@@ -35,30 +35,46 @@ const CustomCombobox: React.FC<CustomComboboxProps> = ({
     filter: contains
   })
 
+  const [inputValue, setInputValue] = React.useState<string>(() => {
+    if (value && value.length > 0) {
+      const selected = initialItems.find((item) => item.value === value[0])
+      return selected ? selected.label : ''
+    }
+    return ''
+  })
+
+  // valueが変わったらinputValueも更新
+  React.useEffect(() => {
+    if (value && value.length > 0) {
+      const selected = initialItems.find((item) => item.value === value[0])
+      setInputValue(selected ? selected.label : '')
+    }
+  }, [value, initialItems])
+
   return (
     <ChakraCombobox.Root
       {...props}
       value={value}
-      onInputValueChange={(e) => filter(e.inputValue)}
-      onValueChange={(details) => onStatusChange?.(details.value[0])}
+      onInputValueChange={(e) => {
+        filter(e.inputValue)
+        setInputValue(e.inputValue)
+      }}
+      onValueChange={(details) => {
+        const selected = initialItems.find(
+          (item) => item.value === details.value[0]
+        )
+        setInputValue(selected ? selected.label : '')
+        onStatusChange?.(details.value[0])
+      }}
       collection={collection}
     >
       <ChakraCombobox.Label>{label}</ChakraCombobox.Label>
       <ChakraCombobox.Control>
-        <ChakraCombobox.Input
-          placeholder={placeholder}
-          value={(() => {
-            if (value && value.length > 0) {
-              const selected = initialItems.find(
-                (item) => item.value === value[0]
-              )
-              return selected ? selected.label : ''
-            }
-            return ''
-          })()}
-        />
+        <ChakraCombobox.Input placeholder={placeholder} value={inputValue} />
         <ChakraCombobox.IndicatorGroup>
-          <ChakraCombobox.ClearTrigger bg="transparent" border="none" />
+          {value && value.length > 0 && (
+            <ChakraCombobox.ClearTrigger bg="transparent" border="none" />
+          )}
           <ChakraCombobox.Trigger bg="transparent" border="none" />
         </ChakraCombobox.IndicatorGroup>
       </ChakraCombobox.Control>
@@ -68,7 +84,7 @@ const CustomCombobox: React.FC<CustomComboboxProps> = ({
             <ChakraCombobox.Empty>
               ステータスが見つかりません
             </ChakraCombobox.Empty>
-            {collection.items.map((item) => (
+            {collection.items.map((item: CollectionItem) => (
               <ChakraCombobox.Item item={item} key={item.value}>
                 {item.label}
                 <ChakraCombobox.ItemIndicator />
@@ -80,5 +96,3 @@ const CustomCombobox: React.FC<CustomComboboxProps> = ({
     </ChakraCombobox.Root>
   )
 }
-
-export default CustomCombobox

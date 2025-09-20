@@ -4,7 +4,6 @@ import { Login } from '@/components/pages/Login'
 
 export const LoginPageOrRedirect = () => {
   const { loginUser } = useLoginUser()
-  console.log(loginUser)
   if (loginUser) {
     return <Navigate to="/home" replace />
   }

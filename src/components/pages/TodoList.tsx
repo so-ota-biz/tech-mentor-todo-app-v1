@@ -10,8 +10,8 @@ import { memo, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DeleteConfirmDialog } from '../molecules/DeleteConfirmDialog'
 import { useTodo } from '@/providers/TodoProvider'
-import { TodoStatusFilterEnum, TodoStatusFilterLabels } from '@/types/api/todo'
-import { CustomCombobox } from '../molecules/CustomCombobox'
+import { TodoStatusFilterEnum } from '@/types/api/todo'
+import { StatusFilterSelect } from '../molecules/StatusFilterSelect'
 import { SortSelect } from '../molecules/SortSelect'
 
 export const TodoList = memo(() => {
@@ -19,10 +19,6 @@ export const TodoList = memo(() => {
   const { todos, setTodos } = useTodo()
 
   // ステータスフィルター用
-  const statusOptions = Object.values(TodoStatusFilterEnum).map((value) => ({
-    value,
-    label: TodoStatusFilterLabels[value]
-  }))
   const [filterStatus, setFilterStatus] = useState<string>(
     TodoStatusFilterEnum.All
   )
@@ -107,14 +103,11 @@ export const TodoList = memo(() => {
           </Button>
         </Flex>
         <Box px={4} pt={4} display="flex" gap={4} alignItems="center">
-          <CustomCombobox
-            initialItems={statusOptions}
-            label="ステータスで絞り込み"
+          <StatusFilterSelect
             value={[filterStatus]}
-            onStatusChange={(status) =>
-              setFilterStatus(status || TodoStatusFilterEnum.All)
-            }
-            placeholder="ステータスを選択"
+            onValueChange={(details) => {
+              setFilterStatus(details.value[0] || TodoStatusFilterEnum.All)
+            }}
           />
           <SortSelect
             value={[`${sortKey}_${sortOrder}`]}
